@@ -5,19 +5,21 @@
 
 #include "DatabaseStandardEntryMenu.h"
 #include "DatabaseAdvancedManipulationMenu.h"
+#include "DatabaseGenerateReports.h"
 
 bool DatabaseMainMenu ()
 {
 DISPLAY:
 	//I call this the Moore Menu System
 	const static std::vector<std::pair<int, std::pair<std::string, fptr_t>>> menuOptions = {
+		//exits the application
 		{1, {"Exit application", [] () -> bool { return false; }}},
+		//this is the transaction stuff
 		{1, {"Standard data entry", DatabaseStandardEntryMenu }},
-		{1, {"Generate database reports", nullptr }},
-		{2, {"Generate advanced database reports", nullptr }},
+		//generates user reports
+		{1, {"Generate database reports", DatabaseGenerateReports }},
+		//this does single table inserts/updates/delets and allows for transaction opetations
 		{3, {"Advanced data manipulation", DatabaseAdvancedManipulationMenu }},
-		{4, {"User management", nullptr }},
-		{5, {"Database administration", nullptr }},
 	};
 
 	std::cout << "Moore's C&R Central database" << lf
@@ -30,7 +32,7 @@ DISPLAY:
 
 	//print the menu options
 	int i = 1;
-	for (const auto menuOption : menuOptions)
+	for (const auto& menuOption : menuOptions)
 		if (accessLevel >= menuOption.first)
 			std::cout << '\t' << i++ << ": " << menuOption.second.first << std::endl;
 
@@ -45,6 +47,7 @@ DISPLAY:
 		goto DISPLAY;
 	}
 
+	//get option and execute
 	if (i > menuOptions.size () || i < 1)
 		goto DISPLAY;
 	else

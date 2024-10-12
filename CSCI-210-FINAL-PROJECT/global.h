@@ -3,6 +3,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <iostream>
 
 namespace SQL
 {
@@ -115,3 +116,5 @@ extern const std::map<Table, std::string> TableToFilterQuery;
 //table to the list of fields
 //used for type checking / lookup
 extern const std::map<Table, std::vector<std::pair<std::string, Type>>> TableToInsertionFields; 
+extern const std::map<Table, std::string> TableToUpdateQuery;
+extern const std::map<Table, std::string> TableToDeleteQuery;

@@ -11,7 +11,6 @@ DISPLAY:
 	const static std::vector<std::pair<int, std::pair<std::string, fptr_t>>> menuOptions = {
 		{1, {"Return to previous menu", [] () -> bool { return false; }}},
 		{1, {"Add new sales contract", nullptr }},
-		{1, {"Add new sales contract", nullptr }},
 		{1, {"Add new acquisition contract", nullptr }},
 		{1, {"Add new transfer", nullptr }},
 	};
