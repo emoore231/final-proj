@@ -271,8 +271,8 @@ void SQL::Result::clear ()
 
 SQL::Result::~Result ()
 {
-	if (statement)
-		sqlite3_finalize ((sqlite3_stmt*)statement);
+//	if (statement)
+//		sqlite3_finalize ((sqlite3_stmt*)statement);
 }
 
 std::map<std::string, std::string>& SQL::Iterator::operator*() const
