@@ -140,10 +140,13 @@
     <ClCompile Include="DatabaseAdvancedManipulationMenu.cpp" />
     <ClCompile Include="DatabaseBeginTransactionMenu.cpp" />
     <ClCompile Include="DatabaseCommitTransactionMenu.cpp" />
+    <ClCompile Include="DatabaseDeleteRecordMenu.cpp" />
+    <ClCompile Include="DatabaseGenerateReports.cpp" />
     <ClCompile Include="DatabaseInsertRecordIntoTableMenu.cpp" />
     <ClCompile Include="DatabaseMainMenu.cpp" />
     <ClCompile Include="DatabaseRollbackTransactionMenu.cpp" />
     <ClCompile Include="DatabaseStandardEntryMenu.cpp" />
+    <ClCompile Include="DatabaseUpdateRecordMenu.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="sqlite3.c" />
     <ClCompile Include="SQLiteDB.cpp" />
@@ -152,10 +155,13 @@
     <ClInclude Include="DatabaseAdvancedManipulationMenu.h" />
     <ClInclude Include="DatabaseBeginTransactionMenu.h" />
     <ClInclude Include="DatabaseCommitTransactionMenu.h" />
+    <ClInclude Include="DatabaseDeleteRecordMenu.h" />
+    <ClInclude Include="DatabaseGenerateReports.h" />
     <ClInclude Include="DatabaseInsertRecordIntoTableMenu.h" />
     <ClInclude Include="DatabaseMainMenu.h" />
     <ClInclude Include="DatabaseRollbackTransactionMenu.h" />
     <ClInclude Include="DatabaseStandardEntryMenu.h" />
+    <ClInclude Include="DatabaseUpdateRecordMenu.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="sqlite3.h" />

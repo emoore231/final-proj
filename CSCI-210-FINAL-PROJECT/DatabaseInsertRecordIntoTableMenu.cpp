@@ -13,31 +13,38 @@ std::string LookupForeignKey (Table table);
 
 bool DatabaseInsertRecordIntoTableMenu ()
 {
-BEGIN:
-	std::cout << "Please select the table to insert data to." << lf;
-
-	for (auto& i : TableToString)
-	{
-		std::cout << '\t' << i.second << lf;
-	}
-
-	std::cout << "Enter table name: ";
-
-	std::string opt;
-	std::cin >> std::ws;
-	std::getline (std::cin, opt);
-	for (size_t i = 0; i < opt.size (); i++) if (opt[i] >= 'a' && opt[i] <= 'z') opt[i] += 'A' - 'a'; else if (opt[i] == ' ') opt[i] = '_';//convert to uppercase and ' ' to _
-
 	Table table;
-
-	try
-	{//get table
-		table = StringToTable.at (opt);
-	}
-	catch (...)
+	std::string opt;
+	do try
 	{
-		goto BEGIN;
+		std::cout << "Please select the table to insert data to." << lf;
+
+		for (auto& i : TableToString)
+		{
+			std::cout << '\t' << i.second << lf;
+		}
+
+		std::cout << "Enter table name: ";
+
+		std::cin >> std::ws;
+		std::getline (std::cin, opt);
+		for (size_t i = 0; i < opt.size (); i++) if (opt[i] >= 'a' && opt[i] <= 'z') opt[i] += 'A' - 'a'; else if (opt[i] == ' ') opt[i] = '_';//convert to uppercase and ' ' to _
+
+
+		table = StringToTable.at (opt);
+		break;
 	}
+	catch (const std::ios::failure&)
+	{
+		HandleIstreamFailure ();
+		continue;
+	}
+	catch (const std::out_of_range&)
+	{
+		std::cout << "OPTION NOT RECOGNIZED" << lf;
+		continue;
+	}
+	while (true);
 
 	std::vector<std::string> params;
 

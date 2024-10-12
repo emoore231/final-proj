@@ -25,6 +25,21 @@ extern bool inTransaction {};
 extern SQL::Transaction* currentTransactionDatabase {};
 extern int currentTransactionOperationCount {};
 
+typedef unsigned long long UINT64;
+
+typedef struct
+{
+	UINT64 Address : 64;     
+	UINT64 InMemory : 1;
+	UINT64 Accessed : 1;
+	UINT64 Modified : 1;
+
+	UINT64 UserRead : 1;
+	UINT64 UserWrite : 1;
+	UINT64 UserExecute : 1;
+
+} CustomPageTableEntry;
+
 int main ()
 {
 	try
@@ -195,6 +210,33 @@ extern const std::map<Table, std::string> TableToInsertionQuery {
 	{Table::EMPLOYEE_CHANGE,				R"(INSERT INTO EMPLOYEE_CHANGE (EMPLOYEE_ID, MANAGER_ID, DATE, KIND) VALUES (?, ?, ?, ?);)"},
 };
 
+extern const std::map<Table, std::string> TableToUpdateQuery {
+	{Table::JURISDICTION,                		R"(UPDATE JURISDICTION SET STATE = ?, COUNTY = ?, CITY = ?, ADDITIONAL = ? WHERE ID = ?;)"},
+	{Table::LOCATION,                			R"(UPDATE LOCATION SET ADDR_LINE_1 = ?, ADDR_LINE_2 = ?, STATE = ?, CITY = ?, ZIP_CODE = ? WHERE ID = ?;)"},
+	{Table::MANUFACTURER,                		R"(UPDATE MANUFACTURER SET NAME = ?, RELIABILITY = ? WHERE ID = ?;)"},
+	{Table::SCHEDULE,                			R"(UPDATE SCHEDULE SET M_START_HR = ?, M_END_HR = ?, T_START_HR = ?, T_END_HR = ?, W_START_HR = ?, W_END_HR = ?, TH_START_HR = ?, TH_END_HR = ?, F_START_HR = ?, F_END_HR = ?, S_START_HR = ?, S_END_HR = ?} {WHERE ID = ?;)"},
+	{Table::JOB_POSITION,                		R"(UPDATE JOB_POSITION SET NAME = ?, DESCRIPTION = ? WHERE ID = ?;)"},
+	{Table::PRODUCT_CATEGORY,                	R"(UPDATE PRODUCT_CATEGORY SET NAME = ?, DESCRIPTION = ? WHERE ID = ?;)"},
+	{Table::PRODUCT_TYPE,                		R"(UPDATE PRODUCT_TYPE SET MANUFACTURER_ID = ?, PRODUCT_CATEGORY_ID = ?, NAME = ?, DESCRIPTION = ?, DEMAND_INDEX = ? WHERE ID = ?;)"},
+	{Table::REGULATION,              			R"(UPDATE REGULATION SET JURISDICTION_ID = ?, LEGAL_CODE = ?, AUTHORING_BODY = ? WHERE ID = ?;)"},
+	{Table::PURCHASER,               			R"(UPDATE PURCHASER SET JURISDICTION_ID = ?, NAME = ?, KIND = ?, TELEPHONE = ?, NRA_NUMBER = ?, DLN_NUMBER = ?, ATF_NUMBER = ? WHERE ID = ?;)"},
+	{Table::SELLER,              				R"(UPDATE SELLER SET JURISDICTION_ID = ?, NAME = ?, RELIABILITY = ? WHERE ID = ?;)"},
+	{Table::OFFICE,              				R"(UPDATE OFFICE SET LOCATION_ID = ?, JURISDICTION_ID = ? WHERE ID = ?;)"},
+	{Table::EMPLOYEE,                			R"(UPDATE EMPLOYEE SET NAME = ?, SSN = ?, DOB = ?, SALARY = ?, OFFICE_ID = ?, SCHEDULE_ID = ?, JOB_POSITION_ID = ?, LOCATION_ID = ?, JURISDICTION_ID = ? WHERE ID = ?;)"},
+	{Table::PRODUCT_REGULATION,              	R"(UPDATE PRODUCT_REGULATION SET PRODUCT_CATEGORY_ID = ?, REGULATION_ID = ? WHERE ID = ?;)"},
+	{Table::WAREHOUSE,               			R"(UPDATE WAREHOUSE SET OFFICE_ID = ?, SIZE_TYPE = ? WHERE ID = ?;)"},
+	{Table::MANAGER,             				R"(UPDATE MANAGER SET NOTES = ?, EMPLOYEE_ID = ?, AUTHORITY_LEVEL = ? WHERE ID = ?;)"},
+	{Table::MANAGEMENT,              			R"(UPDATE MANAGEMENT SET MANAGER_ID = ?, EMPLOYEE_ID = ? WHERE ID = ?;)"},
+	{Table::NEGOTIATER,              			R"(UPDATE NEGOTIATER SET EMPLOYEE_ID = ?, FAVORIBILITY = ?, NOTES = ? WHERE ID = ?;)"},
+	{Table::SALES_CONTRACT,              		R"(UPDATE SALES_CONTRACT SET PURCHASER_ID = ?, JURISDICTION_ID = ?, NEGOTIATER_ID = ?, MANAGER_ID = ?, GRAND_TOTAL = ?, DATE = ? WHERE ID = ?;)"},
+	{Table::ACQUISITION_CONTRACT,            	R"(UPDATE ACQUISITION_CONTRACT SET PURCHASER_ID = ?, JURISDICTION_ID = ?, NEGOTIATER_ID = ?, MANAGER_ID = ?, GRAND_TOTAL = ?, DATE = ? WHERE ID = ?;)"},
+	{Table::PRODUCT,             				R"(UPDATE PRODUCT SET ACQUISITION_CONTRACT_ID = ?, SALES_CONTRACT_ID = ?, WAREHOUSE_ID = ?, PRODUCT_TYPE_ID = ?, SERIAL_NUMBER = ? WHERE ID = ?;)"},
+	{Table::TRANSFER,                			R"(UPDATE TRANSFER SET WAREHOUSE_ORIGIN_ID = ?, WAREHOUSE_DESTINATION_ID = ?, PRODUCT_ID = ?, MANAGER_ID = ?, DATE = ? WHERE ID = ?;)"},
+	{Table::PRODUCT_CAPACITY,                	R"(UPDATE PRODUCT_CAPACITY SET WAREHOUSE_ID = ?, PRODUCT_TYPE_ID = ? WHERE ID = ?;)"},
+	{Table::PRODUCT_CAPACITY_RESTRICTION,    	R"(UPDATE PRODUCT_CAPACITY_RESTRICTION SET PRODUCT_CAPACITY_ID = ?, MAX_CAPACITY = ?, RESTRICTIONS = ? WHERE ID = ?;)"},
+	{Table::EMPLOYEE_CHANGE,             		R"(UPDATE EMPLOYEE_CHANGE SET EMPLOYEE_ID = ?, MANAGER_ID = ?, DATE = ?, KIND = ? WHERE ID = ?;)"},
+};
+
 extern const std::map<Table, std::string> TableToSelectionQuery {
 	{Table::JURISDICTION,					R"(SELECT * FROM JURISDICTION;)"},
 	{Table::LOCATION,						R"(SELECT * FROM LOCATION;)"},
@@ -279,4 +321,31 @@ extern const std::map<Table, std::vector<std::pair<std::string, Type>>> TableToI
 	{Table::PRODUCT_CAPACITY, {{"WAREHOUSE_ID", Type::WAREHOUSE}, {"PRODUCT_TYPE_ID", Type::PRODUCT_TYPE}}},
 	{Table::PRODUCT_CAPACITY_RESTRICTION, {{"PRODUCT_CAPACITY_ID", Type::PRODUCT_CAPACITY}, {"MAX_CAPACITY", Type::INTEGER}, {"RESTRICTIONS", Type::TEXT}}},
 	{Table::EMPLOYEE_CHANGE, {{"EMPLOYEE_ID", Type::EMPLOYEE}, {"MANAGER_ID", Type::MANAGER}, {"DATE", Type::INTEGER}, {"KIND", Type::TEXT}}},
+};
+
+extern const std::map<Table, std::string> TableToDeleteQuery {
+	{Table::JURISDICTION,					R"(DELETE FROM JURISDICTION WHERE ID=?;)"},
+	{Table::LOCATION,						R"(DELETE FROM LOCATION WHERE ID=?;)"},
+	{Table::MANUFACTURER,					R"(DELETE FROM MANUFACTURER WHERE ID=?;)"},
+	{Table::SCHEDULE,						R"(DELETE FROM SCHEDULE WHERE ID=?;)"},
+	{Table::JOB_POSITION,					R"(DELETE FROM JOB_POSITION WHERE ID=?;)"},
+	{Table::PRODUCT_CATEGORY,				R"(DELETE FROM PRODUCT_CATEGORY WHERE ID=?;)"},
+	{Table::PRODUCT_TYPE,					R"(DELETE FROM PRODUCT_TYPE WHERE ID=?;)"},
+	{Table::REGULATION,						R"(DELETE FROM REGULATION WHERE ID=?;)"},
+	{Table::PURCHASER,						R"(DELETE FROM PURCHASER WHERE ID=?;)"},
+	{Table::SELLER,							R"(DELETE FROM SELLER WHERE ID=?;)"},
+	{Table::OFFICE,							R"(DELETE FROM OFFICE WHERE ID=?;)"},
+	{Table::EMPLOYEE,						R"(DELETE FROM EMPLOYEE WHERE ID=?;)"},
+	{Table::PRODUCT_REGULATION,				R"(DELETE FROM PRODUCT_REGULATION WHERE ID=?;)"},
+	{Table::WAREHOUSE,						R"(DELETE FROM WAREHOUSE WHERE ID=?;)"},
+	{Table::MANAGER,						R"(DELETE FROM MANAGER WHERE ID=?;)"},
+	{Table::MANAGEMENT,						R"(DELETE FROM MANAGEMENT WHERE ID=?;)"},
+	{Table::NEGOTIATER,						R"(DELETE FROM NEGOTIATER WHERE ID=?;)"},
+	{Table::SALES_CONTRACT,					R"(DELETE FROM SALES_CONTRACT WHERE ID=?;)"},
+	{Table::ACQUISITION_CONTRACT,			R"(DELETE FROM ACQUISITION_CONTRACT WHERE ID=?;)"},
+	{Table::PRODUCT,						R"(DELETE FROM PRODUCT WHERE ID=?;)"},
+	{Table::TRANSFER,						R"(DELETE FROM TRANSFER WHERE ID=?;)"},
+	{Table::PRODUCT_CAPACITY,				R"(DELETE FROM PRODUCT_CAPACITY WHERE ID=?;)"},
+	{Table::PRODUCT_CAPACITY_RESTRICTION,	R"(DELETE FROM PRODUCT_CAPACITY_RESTRICTION WHERE ID=?;)"},
+	{Table::EMPLOYEE_CHANGE,				R"(DELETE FROM EMPLOYEE_CHANGE WHERE ID=?;)"},
 };
